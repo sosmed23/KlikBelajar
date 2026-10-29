@@ -11,45 +11,70 @@
         h1 { font-family: 'Fredoka One', cursive; }
         .kartu-menu:hover { transform: translateY(-5px); transition: all 0.3s ease; }
         .kartu-menu:active { transform: scale(0.95); }
+        
+        /* Animasi Teks Berjalan */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+        }
+        .animate-marquee {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-6">
+<body class="flex flex-col items-center min-h-screen relative">
 
-    <!-- Header Portal -->
-    <div class="text-center mb-10">
-        <div class="inline-block bg-white p-4 rounded-full shadow-sm mb-4">
-            <span class="text-5xl">🏫</span>
+    <!-- TEKS BERJALAN (PENGUMUMAN) DI PALING ATAS -->
+    <div class="w-full bg-yellow-400 text-yellow-900 font-bold py-2 shadow-md marquee-container absolute top-0 left-0 z-50">
+        <div class="animate-marquee">
+            📢 Selamat datang di KlikBelajar! Portal Pembelajaran Interaktif Madrasah. Mari belajar dengan ceria! 🌟 Jangan lupa mengerjakan kuis setelah membaca materi ya, Anak Shalih dan Shalihah! 🕌
         </div>
-        <h1 class="text-4xl md:text-5xl text-green-600 mb-3">KlikBelajar!</h1>
-        <p class="text-lg text-gray-600 font-bold">Portal Pembelajaran Interaktif Madrasah</p>
     </div>
 
-    <!-- Pilihan Pintu Masuk -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
+    <!-- Kontainer Utama (Diberi jarak atas agar tidak tertutup teks berjalan) -->
+    <div class="flex flex-col items-center justify-center w-full flex-1 p-6 mt-12">
         
-        <!-- Pintu Masuk Siswa -->
-        <!-- Link mengarah ke portal-siswa.html -->
-        <a href="portal-siswa.html" class="kartu-menu bg-white rounded-3xl p-8 shadow-lg border-2 border-green-100 flex flex-col items-center text-center cursor-pointer">
-            <div class="text-7xl mb-4 bg-green-50 w-32 h-32 flex items-center justify-center rounded-full">🎒</div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">Ruang Siswa</h2>
-            <p class="text-gray-500 text-sm font-bold">Pilih materi dan mulai belajar hari ini.</p>
-            <div class="mt-6 w-full bg-green-500 text-white font-bold py-3 rounded-xl">Masuk Belajar ➡️</div>
-        </a>
+        <!-- Header Portal -->
+        <div class="text-center mb-10 mt-8">
+            <div class="inline-block bg-white p-4 rounded-full shadow-sm mb-4">
+                <span class="text-5xl">🏫</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl text-green-600 mb-3">KlikBelajar!</h1>
+            <p class="text-lg text-gray-600 font-bold">Portal Pembelajaran Interaktif Madrasah</p>
+        </div>
 
-        <!-- Pintu Masuk Guru -->
-        <!-- Link mengarah ke input-guru.html -->
-        <a href="input-guru.html" class="kartu-menu bg-white rounded-3xl p-8 shadow-lg border-2 border-blue-100 flex flex-col items-center text-center cursor-pointer">
-            <div class="text-7xl mb-4 bg-blue-50 w-32 h-32 flex items-center justify-center rounded-full">👨‍🏫</div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">Ruang Guru</h2>
-            <p class="text-gray-500 text-sm font-bold">Upload materi dan kelola modul MPI.</p>
-            <div class="mt-6 w-full bg-blue-500 text-white font-bold py-3 rounded-xl">Masuk Upload ➡️</div>
-        </a>
+        <!-- Pilihan Pintu Masuk -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
+            
+            <!-- Pintu Masuk Siswa -->
+            <a href="portal-siswa.html" class="kartu-menu bg-white rounded-3xl p-8 shadow-lg border-2 border-green-100 flex flex-col items-center text-center cursor-pointer">
+                <div class="text-7xl mb-4 bg-green-50 w-32 h-32 flex items-center justify-center rounded-full">🎒</div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Ruang Siswa</h2>
+                <p class="text-gray-500 text-sm font-bold">Pilih materi dan mulai belajar hari ini.</p>
+                <div class="mt-6 w-full bg-green-500 text-white font-bold py-3 rounded-xl">Masuk Belajar ➡️</div>
+            </a>
 
-    </div>
+            <!-- Pintu Masuk Guru -->
+            <a href="input-guru.html" class="kartu-menu bg-white rounded-3xl p-8 shadow-lg border-2 border-blue-100 flex flex-col items-center text-center cursor-pointer">
+                <div class="text-7xl mb-4 bg-blue-50 w-32 h-32 flex items-center justify-center rounded-full">👨‍🏫</div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Ruang Guru</h2>
+                <p class="text-gray-500 text-sm font-bold">Upload materi dan kelola modul MPI.</p>
+                <div class="mt-6 w-full bg-blue-500 text-white font-bold py-3 rounded-xl">Masuk Upload ➡️</div>
+            </a>
 
-    <!-- Footer -->
-    <div class="mt-12 text-center text-gray-400 text-sm font-bold">
-        <p>© 2026 Portal Pendidikan Digital</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-12 text-center text-gray-400 text-sm font-bold">
+            <p>© 2026 Portal Pendidikan Digital</p>
+        </div>
+        
     </div>
 
 </body>
