@@ -11,6 +11,7 @@
         h1 { font-family: 'Fredoka One', cursive; }
         .kartu-menu:hover { transform: translateY(-5px); transition: all 0.3s ease; }
         .kartu-menu:active { transform: scale(0.95); }
+        .stat-card:hover { transform: scale(1.05); transition: all 0.3s ease; }
         
         /* Animasi Teks Berjalan */
         .marquee-container {
@@ -20,32 +21,53 @@
         }
         .animate-marquee {
             display: inline-block;
-            animation: marquee 20s linear infinite;
+            animation: marquee 45s linear infinite;
         }
         @keyframes marquee {
             0% { transform: translateX(100vw); }
             100% { transform: translateX(-100%); }
         }
+        
+        /* Animasi Maskot Melayang */
+        @keyframes melayang {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .maskot-melayang {
+            animation: melayang 3s ease-in-out infinite;
+        }
     </style>
 </head>
-<body class="flex flex-col items-center min-h-screen relative">
+<body class="flex flex-col items-center min-h-screen relative overflow-x-hidden">
 
-    <!-- TEKS BERJALAN (PENGUMUMAN) DI PALING ATAS -->
-    <div class="w-full bg-yellow-400 text-yellow-900 font-bold py-2 shadow-md marquee-container absolute top-0 left-0 z-50">
+    <!-- TEKS BERJALAN (PENGUMUMAN) -->
+    <div class="w-full bg-yellow-400 text-yellow-900 font-bold py-2 shadow-md marquee-container fixed top-0 left-0 z-50">
         <div class="animate-marquee">
             📢 Selamat datang di KlikBelajar! Portal Pembelajaran Interaktif Madrasah. Mari belajar dengan ceria! 🌟 Jangan lupa mengerjakan kuis setelah membaca materi ya, Anak Shalih dan Shalihah! 🕌
         </div>
     </div>
 
-    <!-- Kontainer Utama (Diberi jarak atas agar tidak tertutup teks berjalan) -->
-    <div class="flex flex-col items-center justify-center w-full flex-1 p-6 mt-12">
+    <!-- Kontainer Utama -->
+    <div class="flex flex-col items-center justify-center w-full flex-1 p-6 mt-16">
         
-        <!-- Header Portal -->
-        <div class="text-center mb-10 mt-8">
-            <div class="inline-block bg-white p-4 rounded-full shadow-sm mb-4">
-                <span class="text-5xl">🏫</span>
+        <!-- WAKTU REAL-TIME (JAM & TANGGAL) -->
+        <div class="bg-white/80 backdrop-blur px-6 py-2 rounded-full shadow-sm text-green-700 font-bold mb-6 text-sm md:text-base border border-green-100 flex items-center space-x-2">
+            <span>📅</span> <span id="tampil-tanggal">Memuat tanggal...</span>
+            <span class="mx-2 text-green-300">|</span>
+            <span>⏰</span> <span id="tampil-jam">...</span>
+        </div>
+
+        <!-- Header Portal & MASKOT -->
+        <div class="text-center mb-8">
+            <!-- Gambar Maskot -->
+            <div class="inline-block mb-2">
+                <!-- Anda bisa mengganti URL src di bawah ini dengan nama file gambar Anda sendiri (misal: maskot.png) -->
+                <img src="maskotku.png" 
+                     alt="Maskot KlikBelajar" 
+                     class="w-32 h-32 md:w-40 md:h-40 rounded-full shadow-lg border-4 border-white maskot-melayang mx-auto">
             </div>
-            <h1 class="text-4xl md:text-5xl text-green-600 mb-3">KlikBelajar!</h1>
+            
+            <h1 class="text-4xl md:text-5xl text-green-600 mb-3 mt-4">KlikBelajar!</h1>
             <p class="text-lg text-gray-600 font-bold">Portal Pembelajaran Interaktif Madrasah</p>
         </div>
 
@@ -57,7 +79,7 @@
                 <div class="text-7xl mb-4 bg-green-50 w-32 h-32 flex items-center justify-center rounded-full">🎒</div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">Ruang Siswa</h2>
                 <p class="text-gray-500 text-sm font-bold">Pilih materi dan mulai belajar hari ini.</p>
-                <div class="mt-6 w-full bg-green-500 text-white font-bold py-3 rounded-xl">Masuk Belajar ➡️</div>
+                <div class="mt-6 w-full bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition">Masuk Belajar ➡️</div>
             </a>
 
             <!-- Pintu Masuk Guru -->
@@ -65,17 +87,61 @@
                 <div class="text-7xl mb-4 bg-blue-50 w-32 h-32 flex items-center justify-center rounded-full">👨‍🏫</div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">Ruang Guru</h2>
                 <p class="text-gray-500 text-sm font-bold">Upload materi dan kelola modul MPI.</p>
-                <div class="mt-6 w-full bg-blue-500 text-white font-bold py-3 rounded-xl">Masuk Upload ➡️</div>
+                <div class="mt-6 w-full bg-blue-500 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition">Masuk Upload ➡️</div>
             </a>
 
         </div>
 
+        <!-- STATISTIK SINGKAT -->
+        <div class="w-full max-w-2xl mt-12">
+            <h3 class="text-center text-gray-400 font-bold mb-4 text-sm uppercase tracking-wider">Statistik Portal</h3>
+            <div class="grid grid-cols-3 gap-3 md:gap-6">
+                <div class="stat-card bg-orange-100 rounded-2xl p-4 text-center border border-orange-200 shadow-sm cursor-default">
+                    <div class="text-2xl md:text-3xl mb-1">📚</div>
+                    <div class="text-2xl md:text-3xl font-bold text-orange-600">25</div>
+                    <div class="text-[10px] md:text-xs text-orange-800 font-bold uppercase mt-1">Karya MPI</div>
+                </div>
+                <div class="stat-card bg-purple-100 rounded-2xl p-4 text-center border border-purple-200 shadow-sm cursor-default">
+                    <div class="text-2xl md:text-3xl mb-1">👨‍🏫</div>
+                    <div class="text-2xl md:text-3xl font-bold text-purple-600">12</div>
+                    <div class="text-[10px] md:text-xs text-purple-800 font-bold uppercase mt-1">Guru Aktif</div>
+                </div>
+                <div class="stat-card bg-teal-100 rounded-2xl p-4 text-center border border-teal-200 shadow-sm cursor-default">
+                    <div class="text-2xl md:text-3xl mb-1">🎮</div>
+                    <div class="text-2xl md:text-3xl font-bold text-teal-600">46</div>
+                    <div class="text-[10px] md:text-xs text-teal-800 font-bold uppercase mt-1">Kuis Seru</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
-        <div class="mt-12 text-center text-gray-400 text-sm font-bold">
+        <div class="mt-12 text-center text-gray-400 text-sm font-bold pb-6">
             <p>© 2026 Portal Pendidikan Digital</p>
         </div>
         
     </div>
 
+    <!-- JAVASCRIPT UNTUK JAM DAN TANGGAL OTOMATIS -->
+    <script>
+        function perbaruiWaktu() {
+            const sekarang = new Date();
+            
+            // Format Tanggal (Contoh: Kamis, 29 Oktober 2026)
+            const opsiTanggal = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('tampil-tanggal').textContent = sekarang.toLocaleDateString('id-ID', opsiTanggal);
+            
+            // Format Jam (Contoh: 08:30:45)
+            const jam = String(sekarang.getHours()).padStart(2, '0');
+            const menit = String(sekarang.getMinutes()).padStart(2, '0');
+            const detik = String(sekarang.getSeconds()).padStart(2, '0');
+            document.getElementById('tampil-jam').textContent = jam + ':' + menit + ':' + detik + ' WIB';
+        }
+
+        // Jalankan fungsi perbaruiWaktu setiap 1000 milidetik (1 detik)
+        setInterval(perbaruiWaktu, 1000);
+        
+        // Jalankan sekali saat halaman pertama kali dimuat
+        perbaruiWaktu();
+    </script>
 </body>
 </html>
