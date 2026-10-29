@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Belajar Madrasah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #f0fdf4; }
+        h1 { font-family: 'Fredoka One', cursive; }
+        .kartu:active { transform: scale(0.95); } /* Efek mengecil saat ditekan */
+        
+        /* Animasi loading sederhana */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-custom { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    </style>
+</head>
+<body class="flex flex-col items-center min-h-screen p-6">
+
+    <!-- Judul Header -->
+    <div class="text-center mt-8 mb-10">
+        <h1 class="text-4xl text-green-600 mb-3">Ayo Belajar! 🎒</h1>
+        <p class="text-lg text-gray-600 font-bold bg-green-100 px-6 py-2 rounded-full inline-block">Pilih materi hari ini</p>
+    </div>
+
+    <!-- Area Loading (Tampil sebelum data selesai diambil) -->
+    <div id="loading-indicator" class="flex flex-col items-center justify-center space-y-4 my-10 animate-pulse-custom">
+        <div class="text-5xl">⏳</div>
+        <p class="text-gray-500 font-bold text-lg">Sedang mengambil materi dari Ibu/Bapak Guru...</p>
+    </div>
+
+    <!-- Area Kartu Materi (Awalnya kosong, akan diisi otomatis oleh JavaScript) -->
+    <div id="materi-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl hidden">
+        <!-- Kartu akan muncul di sini -->
+    </div>
+
+    <!-- SCRIPT UNTUK MENARIK DATA DARI GOOGLE SHEETS -->
+    <script>
+        // 1. GANTI URL DI BAWAH INI DENGAN URL WEB APP MILIK ANDA!
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzja3HH5k2fs8NHxd17lv73u4QGFDvJVCVT_jkpy1DhAKn3uqzCR0aL3FE3H7ZPmc5t8w/exec';
+        
+        const container = document.getElementById('materi-container');
+        const loading = document.getElementById('loading-indicator');
+
+        // 2. Fungsi untuk mengambil data (Fetch API)
+        fetch(scriptURL)
+            .then(response => response.json()) // Ubah data menjadi format JSON
+            .then(data => {
+                // Sembunyikan loading
+                loading.classList.add('hidden');
+                // Tampilkan container materi
+                container.classList.remove('hidden');
+
+                // Jika Google Sheets masih kosong (belum ada materi)
+                if (data.length === 0) {
+                    container.innerHTML = '<p class="text-center text-gray-500 col-span-2">Belum ada materi yang ditambahkan.</p>';
+                    return;
+                }
+
+                // 3. Looping (membuat kartu untuk setiap baris di Google Sheets)
+                data.forEach(item => {
+                    // Menentukan ikon dan warna berdasarkan Mata Pelajaran
+                    let ikon = '📚';
+                    let warna = 'bg-blue-300 border-blue-500';
+                    
+                    if(item.Mata_Pelajaran === 'Fikih') { ikon = '🕌'; warna = 'bg-green-300 border-green-500'; }
+                    else if(item.Mata_Pelajaran === "Al-Qur'an Hadits") { ikon = '📖'; warna = 'bg-yellow-300 border-yellow-500'; }
+                    else if(item.Mata_Pelajaran === 'Akidah Akhlak') { ikon = '✨'; warna = 'bg-pink-300 border-pink-500'; }
+
+                    // Menyusun bentuk HTML untuk satu kartu
+                    const kartuHTML = `
+                        <a href="${item.Link_Materi}" target="_blank" class="kartu ${warna} rounded-3xl p-6 shadow-lg flex items-center space-x-4 border-b-4 hover:brightness-110 transition cursor-pointer">
+                            <div class="text-5xl bg-white/40 p-3 rounded-2xl">${ikon}</div>
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-gray-800 bg-white/50 inline-block px-2 py-1 rounded-lg mb-1">${item.Mata_Pelajaran}</p>
+                                <h2 class="text-xl font-bold text-gray-900 leading-tight">${item.Judul_Materi}</h2>
+                                <p class="text-sm text-gray-700 mt-2 font-bold flex items-center">
+                                    <span class="mr-1">👤</span> ${item.Nama_Guru}
+                                </p>
+                            </div>
+                        </a>
+                    `;
+                    
+                    // Masukkan kartu ke dalam halaman web
+                    container.innerHTML += kartuHTML;
+                });
+            })
+            .catch(error => {
+                loading.innerHTML = '<p class="text-red-500 font-bold text-center">Gagal memuat materi. Pastikan Anda terhubung ke internet.</p>';
+                console.error('Error:', error);
+            });
+    </script>
+</body>
+</html>

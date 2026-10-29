@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Input Materi Guru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #f3f4f6; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white w-full max-w-xl rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+        
+        <div class="bg-gradient-to-r from-teal-500 to-emerald-500 p-6 text-center">
+            <h1 class="text-2xl font-bold text-white mb-1">Portal Upload Materi 📚</h1>
+            <p class="text-emerald-50 text-sm">Data akan otomatis masuk ke Google Sheets</p>
+        </div>
+
+        <div class="p-8">
+            <!-- Pesan Sukses (Awalnya Disembunyikan) -->
+            <div id="alert-success" class="hidden mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl text-center font-bold">
+                🎉 Yeay! Materi berhasil diterbitkan!
+            </div>
+
+            <form name="submit-to-google-sheet" class="space-y-5">
+                
+                <div>
+                    <label class="block text-gray-700 font-bold mb-2 text-sm">Nama Guru Pengampu</label>
+                    <!-- Atribut 'name' harus sama persis dengan yang ada di Apps Script -->
+                    <input type="text" name="Nama_Guru" required placeholder="Contoh: Budi Santoso, S.Pd" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none transition">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 font-bold mb-2 text-sm">Mata Pelajaran</label>
+                    <select name="Mata_Pelajaran" required class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none transition">
+                        <option value="">Pilih Mapel...</option>
+                        <option value="Fikih">Fikih</option>
+                        <option value="Al-Qur'an Hadits">Al-Qur'an Hadits</option>
+                        <option value="Akidah Akhlak">Akidah Akhlak</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-bold mb-2 text-sm">Judul Materi / Modul</label>
+                    <input type="text" name="Judul_Materi" required placeholder="Contoh: Tata Cara Wudhu & Praktiknya" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-bold mb-2 text-sm">Tautan (URL) Materi</label>
+                    <input type="url" name="Link_Materi" required placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none transition">
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" id="btn-submit" class="w-full bg-teal-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-teal-200 hover:bg-teal-600 active:scale-95 transition-all text-lg">
+                        🚀 Terbitkan Materi
+                    </button>
+                    <!-- Tombol Loading (Awalnya Disembunyikan) -->
+                    <button disabled id="btn-loading" class="hidden w-full bg-teal-300 text-white font-bold py-4 rounded-xl shadow-lg text-lg cursor-not-allowed">
+                        ⏳ Sedang mengirim data...
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPT UNTUK MENGIRIM DATA KE GOOGLE SHEETS -->
+    <script>
+        // GANTI URL DI BAWAH INI DENGAN URL WEB APP MILIK ANDA!
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzja3HH5k2fs8NHxd17lv73u4QGFDvJVCVT_jkpy1DhAKn3uqzCR0aL3FE3H7ZPmc5t8w/exec';
+        
+        const form = document.forms['submit-to-google-sheet'];
+        const btnSubmit = document.getElementById('btn-submit');
+        const btnLoading = document.getElementById('btn-loading');
+        const alertSuccess = document.getElementById('alert-success');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault(); // Mencegah halaman reload
+            
+            // Ubah tombol jadi loading
+            btnSubmit.classList.add('hidden');
+            btnLoading.classList.remove('hidden');
+            
+            // Kirim data ke API Apps Script
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    // Kembalikan tombol seperti semula
+                    btnLoading.classList.add('hidden');
+                    btnSubmit.classList.remove('hidden');
+                    
+                    // Munculkan pesan sukses dan kosongkan form
+                    alertSuccess.classList.remove('hidden');
+                    form.reset();
+                    
+                    // Hilangkan pesan sukses setelah 3 detik
+                    setTimeout(() => { alertSuccess.classList.add('hidden'); }, 3000);
+                })
+                .catch(error => {
+                    alert('Gagal mengirim data: ' + error.message);
+                    btnLoading.classList.add('hidden');
+                    btnSubmit.classList.remove('hidden');
+                });
+        });
+    </script>
+</body>
+</html>
